@@ -145,3 +145,11 @@ vite.config.ts.timestamp-*
 # claude
 .claude/
 CLAUDE.md
+
+# Large Archives, Sensitive Dumps & Builds
+*.zip
+current database.txt
+incoming_files/
+__pycache__/
+*.pyc
+user_batch_*.txt
