@@ -348,30 +348,12 @@ def main():
     parser.add_argument("--force-full", action="store_true", help="Force full reprocessing from line 1 (ignoring checkpoints)")
     parser.add_argument("--discover-mysql", action="store_true", help="Run the interactive MySQL database auto-discovery tool")
     parser.add_argument("--mysql", action="store_true", help="Run the direct MySQL real-time live watcher")
-    parser.add_argument("--birthdays-preview", action="store_true", help="Preview patients celebrating birthdays today")
-    parser.add_argument("--birthdays-send", action="store_true", help="Dispatch automated birthday wishes for today")
-    parser.add_argument("--birthdays-daemon", action="store_true", help="Run birthday background daemon (sends daily at 8:00 AM)")
 
     args = parser.parse_args()
 
     if getattr(args, "discover_mysql", False):
         import discover_mysql
         discover_mysql.main()
-        return
-
-    if getattr(args, "birthdays_preview", False):
-        import birthday_engine
-        birthday_engine.BirthdayEngine().preview_today()
-        return
-
-    if getattr(args, "birthdays_send", False):
-        import birthday_engine
-        birthday_engine.BirthdayEngine().dispatch_todays_birthdays()
-        return
-
-    if getattr(args, "birthdays_daemon", False):
-        import birthday_engine
-        birthday_engine.BirthdayEngine().run_daily_daemon()
         return
 
     if args.mysql or os.getenv("WATCHER_MODE", "").strip().lower() == "mysql":

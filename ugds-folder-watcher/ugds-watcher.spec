@@ -6,7 +6,7 @@ a = Analysis(
     pathex=[],
     binaries=[],
     datas=[],
-    hiddenimports=['pymysql', 'discover_mysql', 'mysql_watcher', 'birthday_engine'],
+    hiddenimports=['pymysql', 'discover_mysql', 'mysql_watcher'],
     hookspath=[],
 
 
