@@ -20,8 +20,14 @@ import requests
 import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-ARKESEL_API_KEY = "anNXeFZuZUdlRmtnemZPY3NvVUY"
-ARKESEL_SENDER_ID = "UGDS"
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+ARKESEL_API_KEY = os.getenv("ARKESEL_API_KEY", "").strip()
+ARKESEL_SENDER_ID = os.getenv("ARKESEL_SENDER_ID", "UGDS").strip()
 URL_V2 = "https://sms.arkesel.com/api/v2/sms/send"
 BALANCE_URL = "https://sms.arkesel.com/api/v2/clients/balance-details"
 

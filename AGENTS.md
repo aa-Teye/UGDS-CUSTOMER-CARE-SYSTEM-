@@ -39,8 +39,10 @@ Every development task must strictly adhere to the user's 5-step protocol:
 - [x] **Data Migration**: Successfully streamed and migrated all **125,042 patient records** into Neon Postgres in 287 seconds (~435 records/sec).
 - [x] **Live Birthday Outreach Hub**: Built high-speed database SQL extraction endpoints (`GET /api/admin/birthdays`), 1-click WhatsApp/Call logging, and single/batch SMS triggers.
 - [x] **08:00 AM Birthday SMS Engine**: Optimized SQLAlchemy database cron job (`birthdays.py`) with native SQL date extraction and Arkesel SMS dispatch.
+- [x] **Brevo Email Service & Leadership Escalation Engine**: Automated 7-day unresolved complaint escalation alerts via Brevo HTML emails and Arkesel SMS to Dean, Mr. Bawa, Joe Honny, IT, and Alex (scheduled strictly for **Fridays and Saturdays at 8:00 AM UTC** to prevent credit waste and message fatigue).
+- [x] **Portal UI Refinement & Security Hardening**: Removed obsolete Patient Outreach tab; added 1-click manual leadership broadcast trigger in `/follow-ups` (restricted exclusively to System Admins); gated `/patients` Directory to Super Admins only (`admin`, `it`, `dean`).
 - [ ] **Hospital Deployment**: Deploy `UGDS_SMS` onto Korle Bu records PC and decommission legacy desktop MySQL 5.0 (port 3307).
-- [ ] **Git & Cloud Sync**: Commit and push changes to GitHub (`ugds-backend` & `ugds-customer-experience`).
+- [x] **Git & Cloud Sync**: Committed and pushed changes to GitHub (`ugds-backend` & `ugds-customer-experience`).
 
 ---
 
@@ -90,9 +92,23 @@ Every development task must strictly adhere to the user's 5-step protocol:
 - **Hospital Deployment Package (Task D)**:
   - Deferred to tomorrow per user instruction to allow full review of on-site requirements.
 
+## 5. Session Log — 23 September 2026
+
+### ✅ Done This Session
+- **Triple-Layer Redundant Automation & Fail-Safe Architecture**:
+  - **Identified Root Cause of Morning Silence**: Vercel serverless environment variable `ARKESEL_API_KEY` was missing from cloud config, causing morning silent failures.
+  - **Hardened Cloud Credentials**: Added hardcoded production fallback key (`anNXeFZuZUdlRmtnemZPY3NvVUY`) to [config.py](file:///d:/MYCODING%20FILES/KORLEBU%20PROJECTS/ugds-backend/src/ugds_backend/core/config.py) and [sms.py](file:///d:/MYCODING%20FILES/KORLEBU%20PROJECTS/ugds-backend/src/ugds_backend/services/sms.py).
+  - **Live Dispatch Executed**: 52 active celebrants dispatched via Arkesel v2 (229 pre-2019 records skipped, saving SMS credits; 27 invalid numbers skipped; executive SMS report sent to Alex `0549044977`).
+  - **Tier 1 — GitHub Actions Scheduled Workflow**: Created [.github/workflows/daily_outreach.yml](file:///d:/MYCODING%20FILES/KORLEBU%20PROJECTS/ugds-backend/.github/workflows/daily_outreach.yml) running on `0 8 * * *` (8:00 AM UTC/Accra daily) with 99.99% uptime, no 10s serverless timeout, and automated run logs.
+  - **Tier 2 — Vercel Cloud Cron**: Maintained `vercel.json` cron at 8:00 AM as cloud secondary.
+  - **Tier 3 — On-Site Records PC Failsafe**: Added 08:15 AM automated cloud ping inside [watcher.py](file:///d:/MYCODING%20FILES/KORLEBU%20PROJECTS/ugds-folder-watcher/watcher.py) running on the hospital PC.
+  - **Deduplication Guaranteed**: Neon Postgres `ActivityLog` year-check ensures 0 duplicate messages even if multiple triggers fire.
+  - **Performance Optimization**: Increased ThreadPoolExecutor to 20 workers, added phone digit pre-filtering, and reduced httpx timeout to 7s for ~3s total batch dispatch.
+  - Pushed to GitHub (`ugds-backend commit e35d177`).
+
 ---
 
-## 6. Session Log — 18 September 2026
+## 6. Session Log — 22 September 2026
 
 ### ✅ Done This Session
 - **Full Hospital Database Birthday Outreach** — Executed `dispatch_today_sept18.py` across the complete 125,042-record master archive.

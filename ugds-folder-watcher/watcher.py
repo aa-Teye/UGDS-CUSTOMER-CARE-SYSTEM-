@@ -329,13 +329,38 @@ class TrackerWatcher:
             self.process_file(fpath)
 
 
+    def ping_morning_birthday_failsafe(self):
+        try:
+            import urllib.request
+            logger.info("Executing 08:15 AM automated cloud birthday failsafe ping...")
+            req = urllib.request.Request(
+                "https://ugds-backend.vercel.app/api/cron/birthdays",
+                headers={"User-Agent": "UGDS-RecordsPC-Watcher/1.0"}
+            )
+            with urllib.request.urlopen(req, timeout=25) as response:
+                status = response.getcode()
+                body = response.read().decode("utf-8")
+                logger.info(f"Cloud birthday failsafe executed: HTTP {status} - {body[:120]}")
+        except Exception as e:
+            logger.warning(f"Cloud birthday failsafe ping skipped/failed: {e}")
+
     def start_polling_loop(self, poll_interval: int = 5):
         """Continuous polling loop to detect changes or new files."""
         self.print_banner()
         logger.info(f"Watching for tracker files every {poll_interval}s. Press Ctrl+C to stop.")
+        import datetime
+        last_morning_check = ""
         try:
             while True:
                 self.scan_directory()
+
+                # 08:15 AM Failsafe: Ping cloud birthday engine if not yet pinged today
+                now = datetime.datetime.now()
+                today_str = now.strftime("%Y-%m-%d")
+                if now.hour == 8 and now.minute >= 15 and last_morning_check != today_str:
+                    last_morning_check = today_str
+                    self.ping_morning_birthday_failsafe()
+
                 time.sleep(poll_interval)
         except KeyboardInterrupt:
             logger.info("Watcher stopped by user.")

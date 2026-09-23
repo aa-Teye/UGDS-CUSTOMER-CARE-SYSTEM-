@@ -5,16 +5,22 @@ import sqlite3
 import requests
 from datetime import datetime
 
+from dotenv import load_dotenv
+
 # Base directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "sent_history.db")
 ENV_PATH = os.path.join(BASE_DIR, ".env")
 
-API_KEY = "anNXeFZuZUdlRmtnemZPY3NvVUY"
-SENDER_ID = "UGDS"
-ADMIN_PHONE = "233549044977"
+load_dotenv(ENV_PATH)
+
+API_KEY = os.getenv("ARKESEL_API_KEY", "").strip()
+SENDER_ID = os.getenv("ARKESEL_SENDER_ID", "UGDS").strip()
+ADMIN_PHONE = os.getenv("ADMIN_PHONE", "233549044977").strip()
 
 def send_admin_sms(message: str):
+    if not API_KEY:
+        return
     url = "https://sms.arkesel.com/api/v2/sms/send"
     headers = {"api-key": API_KEY, "Content-Type": "application/json"}
     payload = {
